@@ -6,4 +6,6 @@ Cette app n'est en aucun cas officielle.
 
 Le code de l'app suit les conventions « *quick and dirty* ».
 
+Une version de démo se trouve à l'adresse http://yuzu.ovh/mixit-app/.
+
 Code sous [licence WTFPL](http://www.wtfpl.net/).
