@@ -1,0 +1,123 @@
+.session-list {
+  position: fixed;
+  top: 54px;
+  bottom: 54px;
+  overflow: auto;
+  width: 40%;
+
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+.session-list .list-group-item:first-child {
+  border-radius: 0;
+  border-top: none;
+}
+.session-list .list-group-item:last-child {
+  border-radius: 0;
+  border-bottom: none;
+}
+
+a.list-group-item {
+  outline: 0;
+}
+
+a.list-group-item.session-favorite,
+a.list-group-item.session-favorite:focus {
+  background-color: #fbfbd0;
+  color: #e67e22;
+}
+a.list-group-item.session-favorite.active,
+a.list-group-item.session-favorite.active:focus {
+  background-color: #e67e22;
+  color: #fff;
+  border: 1px solid #d35400;
+}
+
+.list-group-item .label {
+  font-weight: normal;
+  color: #666;
+  background-color: #fff;
+  border: 1px solid #eee;
+}
+.list-group-item .label .session-room-date {
+  padding-right: .5rem;
+}
+.list-group-item .label .session-hours {
+  font-weight: bold;
+  color: #000;
+}
+
+.session-popularity {
+  padding: 0;
+}
+.session-popularity-item {
+  display: inline-block;
+  margin-right: 1rem;
+  padding: .2rem .5rem;
+
+  font-weight: bold;
+
+  border-radius: 3px;
+}
+.session-popularity-item.session-not-favorite a:hover,
+.session-popularity-item.session-favorite a {
+  color: #f39c12;
+}
+.session-popularity-item.session-not-favorite a {
+  color: #34495e;
+}
+.session-votes {
+  background-color: #FFD335;
+  color: #fff;
+}
+.session-consultations {
+  background-color: #16a085;
+  color: #fff;
+}
+
+.speaker-list {
+  padding: 0;
+}
+.speaker {
+  display: inline-block;
+  margin-right: 2rem;
+
+  color: #666;
+}
+
+.lead {
+  padding: 1.5rem;
+  background-color: #f6f6f6;
+}
+.lead p:last-child {
+  margin-bottom: 0;
+}
+
+.loader {
+  text-align: center;
+}
+
+.ball-scale-ripple-multiple {
+  top: 2rem;
+  left: 50%;
+}
+.ball-scale-ripple-multiple > div {
+  border-color: orange;
+}
+
+.tip {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  width: 16%;
+  margin-top: 2rem;
+  padding: 0 1rem;
+
+  color: #999;
+  font-size: .8rem;
+  line-height: 1.5rem;
+}
+.tip kbd {
+  background-color: #999;
+}
