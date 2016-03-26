@@ -5,9 +5,27 @@
   padding-top: .5rem;
 }
 
+.filters {
+  height: 3.4rem;
+  margin-bottom: .5rem;
+
+  line-height: 2.25rem;
+
+  background-color: #eee;
+  border-radius: .25rem;
+}
+.filters .filter-session-favorite {
+  background-color: #f39c12;
+  border-color: #f39c12;
+}
+.filters a.filter-session-favorite {
+  color: #fff;
+  text-decoration: none;
+}
+
 .session-list {
   position: fixed;
-  top: calc(54px + .5rem);
+  top: calc(54px + .5rem + 62px);
   bottom: .5rem;
   overflow: auto;
   width: 40%;
@@ -21,7 +39,6 @@
 }
 .session-list .list-group-item:last-child {
   border-radius: 0;
-  border-bottom: none;
 }
 
 a.list-group-item {

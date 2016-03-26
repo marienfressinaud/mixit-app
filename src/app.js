@@ -22,6 +22,12 @@ var App = React.createClass({
       content = (
         <div>
           <div className="col-md-5">
+            <SessionFilters
+              numberSessionsToShow={this.props.sessions.length}
+              filter_favorites_only={this.props.filter_favorites_only}
+              setFilterFavoriteOnly={this.props.setFilterFavoriteOnly}
+              setFilterTitle={this.props.setFilterTitle}
+            />
             <SessionList
               currentSession={this.props.currentSession}
               favoriteSessions={this.props.favoriteSessions}
@@ -67,7 +73,7 @@ var App = React.createClass({
                 </li>
               </ul>
               <p className="tip">
-                <span className="fa fa-question-circle" /> Conseil : utilisez les flèches ou <kbd>j</kbd>/<kbd>k</kbd> pour naviguer dans les conférences. Marquez la conférence sélectionnée avec <kbd>f</kbd> pour la trouver plus facilement.
+                <span className="fa fa-question-circle" /> Conseil : utilisez les flèches ou <kbd>j</kbd>/<kbd>k</kbd> pour naviguer dans les conférences. Marquez la conférence sélectionnée avec <kbd>f</kbd> pour la trouver plus facilement. <kbd>r t</kbd> pour filtrer sur les titres, <kbd>r f</kbd> pour filtrer les favoris.
               </p>
             </div>
 
@@ -85,7 +91,8 @@ App = ReactRedux.connect(
       isFetchingData: state.isFetchingData,
       currentSession: state.currentSession,
       favoriteSessions: state.favoriteSessions,
-      sessions: state.sessions,
+      filter_favorites_only: state.filters.favorites_only,
+      sessions: sessionsSelector(state),
     };
   },
 
@@ -97,9 +104,54 @@ App = ReactRedux.connect(
       }),
       addFavoriteSession: (idSession) => dispatch(addFavoriteSession(idSession)),
       removeFavoriteSession: (idSession) => dispatch(removeFavoriteSession(idSession)),
+      setFilterFavoriteOnly: (value) => dispatch({
+        type: 'SET_FILTER_FAVORITE_ONLY',
+        value,
+      }),
+      setFilterTitle: (value) => dispatch({
+        type: 'SET_FILTER_TITLE',
+        value,
+      }),
     }
   }
 )(App);
+
+const SessionFilters = React.createClass({
+  render: function() {
+    var filterFavoriteClass = "fa";
+    if (this.props.filter_favorites_only) {
+      filterFavoriteClass += " fa-star"
+    } else {
+      filterFavoriteClass += " fa-star-o"
+    }
+
+    return (
+      <div className="row filters">
+        <div className="col-md-6">
+          <input
+            type="search"
+            className="form-control filter-session-title"
+            placeholder="Filtrer sur les titres…"
+            ref="filterTitle"
+            onChange={() => { this.props.setFilterTitle(this.refs.filterTitle.value)}}
+          />
+        </div>
+        <div className="col-md-4">
+          <a
+            href="#"
+            className="btn filter-session-favorite"
+            onClick={(e) => { e.preventDefault(); this.props.setFilterFavoriteOnly(!this.props.filter_favorites_only); }}
+          >
+            <span className={filterFavoriteClass} /> Filtrer les favoris
+          </a>
+        </div>
+        <div className="col-md-2 text-xs-right">
+          {this.props.numberSessionsToShow}&nbsp;résultat{this.props.numberSessionsToShow > 1 ? 's' : ''}
+        </div>
+      </div>
+    );
+  }
+});
 
 const SessionList = React.createClass({
   sessionNodes: function() {
@@ -141,7 +193,7 @@ const SessionList = React.createClass({
     if (this.props.sessions.length <= 0) {
       return (
         <div className="alert alert-warning">
-          Aucune conférence n’a été prévue pour le Mix-IT. Revenez l’année prochaine !
+          Aucune conférence ne correspond à votre recherche.
         </div>
       )
     }
@@ -282,24 +334,7 @@ function removeFavoriteSession(idSession) {
 const appReducer = Redux.combineReducers({
   sessions: (state = [], action) => {
     if (action.type == 'RECEIVE_DATA') {
-      var sessions = action.data;
-      sessions.sort((session1, session2) => {
-        if (session1.start === null && session2.start === null) { return session1.idSession - session2.idSession; }
-        if (session1.start === null) { return 1; }
-        if (session2.start === null) { return -1; }
-
-        var session1Date = moment(session1.start);
-        if (session1Date.isAfter(session2.start)) {
-          return 1;
-        }
-        if (session1Date.isBefore(session2.start)) {
-          return -1;
-        }
-
-        return session1.idSession - session2.idSession;
-      });
-
-      return sessions;
+      return action.data;
     }
     return state;
   },
@@ -337,7 +372,58 @@ const appReducer = Redux.combineReducers({
     }
     return state;
   },
+
+  filters: (state = { favorites_only: false }, action) => {
+    return {
+      favorites_only: (state = false, action) => {
+        if (action.type == 'SET_FILTER_FAVORITE_ONLY') {
+          return action.value;
+        }
+        return state;
+      }(state.favorites_only, action),
+      title: (state = '', action) => {
+        if (action.type == 'SET_FILTER_TITLE') {
+          return action.value;
+        }
+        return state;
+      }(state.title, action),
+    };
+  },
 });
+
+/**
+ * Selector
+ */
+
+function sessionsSelector(state) {
+  var sessions = state.sessions;
+  if (state.filters.favorites_only || state.filters.title !== '') {
+    sessions = sessions.filter((session) => {
+      if (state.filters.title !== '' && !session.title.contains(state.filters.title)) {
+        return false;
+      }
+      return !state.filters.favorites_only || state.favoriteSessions.indexOf(session.idSession) !== -1;
+    });
+  }
+
+  sessions.sort((session1, session2) => {
+    if (session1.start === null && session2.start === null) { return session1.idSession - session2.idSession; }
+    if (session1.start === null) { return 1; }
+    if (session2.start === null) { return -1; }
+
+    var session1Date = moment(session1.start);
+    if (session1Date.isAfter(session2.start)) {
+      return 1;
+    }
+    if (session1Date.isBefore(session2.start)) {
+      return -1;
+    }
+
+    return session1.idSession - session2.idSession;
+  });
+
+  return sessions;
+}
 
 /**
  * Configure store
@@ -408,7 +494,7 @@ function foundNextSession(sessions, currentSession) {
 Mousetrap.bind(['j', 'down'], function() {
   var state = store.getState();
   var currentSession = state.currentSession;
-  var sessions = state.sessions;
+  var sessions = sessionsSelector(state);
   if (sessions.length <= 0) {
     return;
   }
@@ -443,7 +529,7 @@ function foundPreviousSession(sessions, currentSession) {
 Mousetrap.bind(['k', 'up'], function() {
   var state = store.getState();
   var currentSession = state.currentSession;
-  var sessions = state.sessions;
+  var sessions = sessionsSelector(state);
   if (sessions.length <= 0) {
     return;
   }
@@ -461,4 +547,11 @@ Mousetrap.bind(['k', 'up'], function() {
   });
 
   return false;
+});
+
+Mousetrap.bind('r f', function() {
+  $('.filter-session-favorite')[0].click();
+});
+Mousetrap.bind('r t', function() {
+  $('.filter-session-title')[0].focus();
 });
