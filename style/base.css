@@ -1,7 +1,14 @@
+.navbar {
+  border-radius: 0;
+}
+.row {
+  padding-top: .5rem;
+}
+
 .session-list {
   position: fixed;
-  top: 54px;
-  bottom: 54px;
+  top: calc(54px + .5rem);
+  bottom: .5rem;
   overflow: auto;
   width: 40%;
 
@@ -21,6 +28,9 @@ a.list-group-item {
   outline: 0;
 }
 
+a.list-group-item:focus {
+  background-color: #fff;
+}
 a.list-group-item.session-favorite,
 a.list-group-item.session-favorite:focus {
   background-color: #fbfbd0;
@@ -112,11 +122,13 @@ a.list-group-item.session-favorite.active:focus {
 
   width: 16%;
   margin-top: 2rem;
-  padding: 0 1rem;
+  padding: 1rem;
 
   color: #999;
   font-size: .8rem;
   line-height: 1.5rem;
+
+  border-top: 1px solid #ddd;
 }
 .tip kbd {
   background-color: #999;
