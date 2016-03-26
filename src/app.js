@@ -43,8 +43,20 @@ var App = React.createClass({
 
     return (
       <div className="mixit-app">
-        <nav className="navbar navbar navbar-light navbar-static-top bd-navbar">
+        <nav className="navbar navbar-light navbar-static-top bd-navbar">
           <a className="navbar-brand" href="index.html">Mix-IT App</a>
+          <ul className="nav navbar-nav">
+            <li className="nav-item">
+              <a className="nav-link" href="http://www.mix-it.fr/">
+                Site du Mix-IT
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="https://github.com/marienfressinaud/mixit-app">
+                <span className="fa fa-github" /> Code source de l'app
+              </a>
+            </li>
+          </ul>
         </nav>
         <div className="container-fluid">
           <div className="row">
