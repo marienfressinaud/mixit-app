@@ -128,13 +128,15 @@ const SessionFilters = React.createClass({
     return (
       <div className="row filters">
         <div className="col-md-6">
-          <input
-            type="search"
-            className="form-control filter-session-title"
-            placeholder="Filtrer sur les titres…"
-            ref="filterTitle"
-            onChange={() => { this.props.setFilterTitle(this.refs.filterTitle.value)}}
-          />
+          <form onSubmit={(e) => { e.preventDefault(); this.refs.filterTitle.blur(); Mousetrap.trigger('j'); }}>
+            <input
+              type="search"
+              className="form-control filter-session-title"
+              placeholder="Filtrer sur les titres…"
+              ref="filterTitle"
+              onChange={() => { this.props.setFilterTitle(this.refs.filterTitle.value)}}
+            />
+          </form>
         </div>
         <div className="col-md-4">
           <a
@@ -491,7 +493,7 @@ function foundNextSession(sessions, currentSession) {
   return sessions[0];
 }
 
-Mousetrap.bind(['j', 'down'], function() {
+Mousetrap.bind(['j', 'down', 'enter'], function() {
   var state = store.getState();
   var currentSession = state.currentSession;
   var sessions = sessionsSelector(state);
