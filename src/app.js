@@ -399,7 +399,7 @@ function sessionsSelector(state) {
   var sessions = state.sessions;
   if (state.filters.favorites_only || state.filters.title !== '') {
     sessions = sessions.filter((session) => {
-      if (state.filters.title !== '' && !session.title.contains(state.filters.title)) {
+      if (state.filters.title !== '' && !session.title.toLowerCase().contains(state.filters.title.toLowerCase())) {
         return false;
       }
       return !state.filters.favorites_only || state.favoriteSessions.indexOf(session.idSession) !== -1;
