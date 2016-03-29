@@ -59,7 +59,7 @@ var App = React.createClass({
             </li>
             <li className="nav-item">
               <a className="nav-link" href="https://github.com/marienfressinaud/mixit-app">
-                <span className="fa fa-github" /> Code source de l'app
+                <span className="fa fa-github" /> Code source de l’app
               </a>
             </li>
           </ul>
